@@ -8,6 +8,17 @@
           <div class="six columns">
             <p class="major-info"><%= event.location %></p>
             <p class="major-info"><%= event.start_at.strftime('%Y/%m/%d %H:%M') %></p>
+            <% if user_signed_in? %>
+              <% if event.favorited_by?(current_user) %>
+                <%= link_to event_favorites_path(event), method: :delete, class: 'button button-primary' do %>
+                  <i class="fas fa-star favorite-icon-white"></i>Favorite
+                <% end %>
+              <% else %>
+                <%= link_to event_favorites_path(event), method: :post, class: 'button' do %>
+                  <i class="fas fa-star favorite-icon"></i>Favorite
+                <% end %>
+              <% end %>
+            <% end %>
           </div>
           <div class="six columns">
             <p class="ticket-price"><%= event.ticket_price %>円</p>

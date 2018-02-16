@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   
   resources :events, only: [:index] do
     resources :purchases, only: [:new, :create]
+    resource :favorites, only: [:create, :destroy]
   end
 
   get '/purchases', to: 'purchases#index'
