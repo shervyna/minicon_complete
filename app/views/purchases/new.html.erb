@@ -34,11 +34,27 @@
         </table>
       </card>
     </div>
+    
     <div id="order-confirmation" class="four columns">
       <card class="order-confirmation-card">
         <h4>Order Total</h4>
         <h5><%= @event.ticket_price %>円</h5>
-        <%= form.submit 'Confirm', class: 'button button-primary', data: { confirm: 'Your order will be processed. Are you sure?' } %>
+        
+        <!--<%= form.submit 'Confirm', class: 'button button-primary', data: { confirm: 'Your order will be processed. Are you sure?' } %>-->
+        <%= form_tag event_purchases_path do %>
+            <% if flash[:error].present? %>
+                <div id="error_explanation">
+                  <p><%= flash[:error] %></p>
+                </div>
+            <% end %>
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                  data-description="Payment"
+                  data-currency="jpy"
+                  data-amount= <%= @event.ticket_price %>
+                  data-locale="auto"></script>
+        <% end %>
+      
       </card>
     </div>
   </div>

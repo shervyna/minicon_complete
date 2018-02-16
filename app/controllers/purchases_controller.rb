@@ -11,6 +11,24 @@ class PurchasesController < ApplicationController
   end
   
   def create
+    begin
+      customer = Stripe::Customer.create(
+        :email => params[:stripeEmail],
+        :source  => params[:stripeToken]
+      )
+
+      charge = Stripe::Charge.create(
+        :customer    => customer.id,
+        :amount      => params[:purchase][:total_price],
+        :description => 'Rails Stripe customer',
+        :currency    => 'jpy'
+      )
+    
+    rescue Stripe::CardError => e
+      flash[:error] = e.message
+      redirect_to new_event_purchase_path
+    end
+
     @purchase = Purchase.new(purchase_params)
     @purchase.user_id = current_user.id
     
